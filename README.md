@@ -1,4 +1,4 @@
-# Invoice Generator
+# Invoice Generator with QR CODE
 
 A modern, professional invoice generator built with React and TypeScript. Create, preview, and send beautiful invoices with integrated PayPal payment support.
 
