@@ -1,133 +1,48 @@
-# Invoice Generator with QR CODE
+# Invoice Generator
 
-A modern, professional invoice generator built with React and TypeScript. Create, preview, and send beautiful invoices with integrated PayPal payment support.
+A single-page invoice generator: fill in the business and the client, add line items, set a tax rate and a currency, preview, download the PDF. A PayPal.me link becomes a QR code on the invoice. Nothing leaves the browser: there is no backend and no account.
 
-![Invoice Generator Preview](https://images.unsplash.com/photo-1636819488524-1f019c4e1c44?w=800&h=400&fit=crop)
+![The invoice preview](docs/screenshot.png)
+
+**Status:** maintained as a utility, not a product. Dependencies are kept current (Dependabot is on); features are added when someone needs them.
 
 ## Features
 
-- 🎨 Beautiful, responsive design with light/dark mode
-- 💰 Multiple currency support
-- 📱 Mobile-friendly interface
-- 🏢 Business and client information management
-- 📊 Dynamic line items with automatic calculations
-- 💳 PayPal.me integration for easy payments
-- 📷 Company logo upload support
-- 🖨️ PDF generation and download
-- 📧 Email invoice sharing
-- 📱 QR code generation for quick payments
-- 🌙 "Under the table" mode with tax handling
-- 🔢 Automatic invoice numbering
-- 📝 Custom notes support
+- Business and client details, with an optional logo upload.
+- Line items with quantity and unit price; subtotal, tax and total computed as you type.
+- Tax rate per invoice, including 0% for exempt or reverse-charge invoices.
+- Currency selection with locale-aware formatting.
+- Automatic invoice numbering, invoice and due dates, free-text notes.
+- Preview, PDF download (jsPDF), and a QR code for the PayPal.me payment link.
+- Light and dark mode; responsive layout.
 
-## Tech Stack
+The "Send by email" button only simulates a send: there is no mail service behind the app. Download the PDF and attach it.
 
-- React 18
-- TypeScript
-- Tailwind CSS
-- Vite
-- jsPDF (PDF generation)
-- QR Code generation
-- Lucide React (icons)
-- React Hot Toast (notifications)
+## Quickstart
 
-## Getting Started
+```bash
+git clone https://github.com/ElecteSrl/invoicegenerator.git
+cd invoicegenerator
+npm install
+npm run dev
+```
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
+Open http://localhost:5173. `npm run build` writes a static site to `dist/`; `npm run lint` runs ESLint.
 
-## Usage
+## Stack
 
-### Creating an Invoice
+React 18, TypeScript, Vite, Tailwind CSS, jsPDF + jspdf-autotable, qrcode, Lucide icons, react-hot-toast.
 
-1. Fill in your business information:
-   - Company name
-   - Email
-   - Address
-   - PayPal.me link
-   - Upload company logo (optional)
-
-2. Add client information:
-   - Client name
-   - Email
-   - Address
-
-3. Customize invoice details:
-   - Invoice number (auto-generated)
-   - Date
-   - Due date
-   - Currency
-
-4. Add line items:
-   - Description
-   - Quantity
-   - Unit price
-   - (Total is calculated automatically)
-
-5. Set tax rate (optional)
-
-### Preview and Send
-
-- Click "Preview Invoice" to see how it looks
-- Download as PDF
-- Send via email
-- Share PayPal payment link with QR code
-
-### Special Features
-
-- **Dark Mode**: Toggle between light and dark themes
-- **"Under the Table" Mode**: Special mode for informal transactions
-- **Currency Support**: Multiple currency options available
-- **QR Code**: Automatically generated for PayPal payments
-- **Responsive Design**: Works on all devices
-
-## Development
-
-### Project Structure
+## Project structure
 
 ```
 src/
-├── components/         # React components
-├── types/             # TypeScript interfaces
-├── utils/             # Utility functions
-└── App.tsx            # Main application component
+├── components/   # InvoiceForm, InvoicePreview, CurrencySelector, LogoUpload
+├── utils/        # pdf.ts, qrcode.ts, currencies.ts, email.ts, sampleData.ts
+├── types.ts
+└── App.tsx
 ```
-
-### Key Components
-
-- `InvoiceForm`: Main form for creating invoices
-- `InvoicePreview`: Preview and actions for completed invoices
-- `CurrencySelector`: Currency selection component
-- `LogoUpload`: Company logo upload handler
-
-### Utilities
-
-- `pdf.ts`: PDF generation using jsPDF
-- `qrcode.ts`: QR code generation for payments
-- `currencies.ts`: Currency formatting and options
-- `email.ts`: Email handling functions
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a new Pull Request
 
 ## License
 
-MIT License - feel free to use this project for personal or commercial purposes.
-
-## Acknowledgments
-
-- Icons by [Lucide](https://lucide.dev)
-- PDF generation by [jsPDF](https://github.com/parallax/jsPDF)
-- QR Code generation by [qrcode](https://github.com/soldair/node-qrcode)
+[MIT](LICENSE) © ELECTE S.R.L.

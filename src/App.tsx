@@ -40,17 +40,17 @@ function App() {
                     ? 'bg-black text-white hover:bg-white hover:text-black'
                     : 'bg-white text-black hover:bg-black hover:text-white'
                 } transition-colors duration-200`}
-                title={blackMode ? 'Switch to regular mode' : 'Switch to "under the table" mode 🤫'}
+                title={blackMode ? 'Switch to light mode' : 'Switch to dark mode'}
               >
                 {blackMode ? (
                   <>
                     <Sun className="h-4 w-4" />
-                    <span>Regular Mode</span>
+                    <span>Light mode</span>
                   </>
                 ) : (
                   <>
                     <Moon className="h-4 w-4" />
-                    <span>Black Mode 🤫</span>
+                    <span>Dark mode</span>
                   </>
                 )}
               </button>

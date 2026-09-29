@@ -14,7 +14,8 @@ export const sendInvoiceEmail = async (data: InvoiceData): Promise<void> => {
       attachment: pdfBlob,
     };
 
-    // Since we don't have a real email service, we'll simulate success
+    // There is no mail service behind this app: the send is simulated.
+    console.info('Simulated email', { to: emailData.to, subject: emailData.subject });
     await new Promise(resolve => setTimeout(resolve, 1500));
     toast.success('Email sent successfully (simulated)');
   } catch (error) {

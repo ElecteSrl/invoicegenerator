@@ -83,7 +83,7 @@ export const generatePDF = (data: InvoiceData & { qrCode?: string }): jsPDF => {
     styles: { fontSize: 10 },
   });
 
-  yPos = (pdf as any).lastAutoTable.finalY + 20;
+  yPos = ((pdf as jsPDF & { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? yPos) + 20;
 
   // Summary
   pdf.setFontSize(12);

@@ -52,12 +52,6 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onSubmit, initialData, blackM
     }
   }, [initialData]);
 
-  useEffect(() => {
-    if (blackMode) {
-      setTaxRate(0);
-    }
-  }, [blackMode]);
-
   const handleBusinessInfoChange = (field: keyof BusinessInfo, value: string) => {
     setBusinessInfo(prev => ({ ...prev, [field]: value }));
     if (errors[`business_${field}`]) {
