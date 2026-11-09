@@ -1,6 +1,6 @@
-# Juror (juror-ai/juror, MIT) — a cross-model jury on every pull request, beside OpenCode (opencode.yml). A trial,
-# Fabio 2026-11-09 ("juror on all the repos"); record and how it is judged: ElecteSrl/electe.net docs/tooling/juror.md. The jury, the EU endpoint and the publish
-# rules are `.juror.yml`, which Juror reads from the BASE revision only.
+# Juror (juror-ai/juror, MIT) — a cross-model jury on every pull request. A trial, Fabio 2026-11-09 ("juror on all
+# the repos"); the record and how it is judged are ElecteSrl/electe.net's docs/tooling/juror.md. The jury, the EU
+# endpoint and the publish rules are `.juror.yml`, which Juror reads from the BASE revision only.
 #
 #   - FAIL-CLOSED like opencode.yml: without the OPENROUTER_API_KEY secret, or while `.juror.yml` is not yet on the
 #     base branch, the job exits green having called no model (Juror's built-in default jury needs keys we do not
