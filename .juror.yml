@@ -1,5 +1,5 @@
-# Juror (juror-ai/juror, MIT): a cross-model jury on every pull request, beside OpenCode. A trial (Fabio, 2026-11-09:
-# "juror is good to try on openrouter"); record and how it is judged: docs/tooling/juror.md.
+# Juror (juror-ai/juror, MIT): a cross-model jury on every pull request. A trial (Fabio, 2026-11-09: "juror on all
+# the repos"); the same jury and rules as ElecteSrl/electe.net, whose docs/tooling/juror.md is the record.
 #
 # Juror reads this file from the pull request's BASE revision, never from the branch under review, so a pull
 # request cannot redirect a reviewer's endpoint or add a model while it is being reviewed.
