@@ -1,0 +1,61 @@
+# Juror (juror-ai/juror, MIT): a cross-model jury on every pull request, beside OpenCode. A trial (Fabio, 2026-11-09:
+# "juror is good to try on openrouter"); record and how it is judged: docs/tooling/juror.md.
+#
+# Juror reads this file from the pull request's BASE revision, never from the branch under review, so a pull
+# request cannot redirect a reviewer's endpoint or add a model while it is being reviewed.
+version: 1
+
+# A custom jury: three model families, every one through OpenRouter's EU endpoint (log 034) on the key OpenCode
+# already uses. Chosen from the models the EU region serves with tool calling, by the coding index, on 2026-11-09.
+models:
+  - id: glm-5.3
+    harness: generic-openai
+    secret: JUROR_OPENROUTER_API_KEY
+    label: GLM 5.3 (Z.ai, OpenRouter EU)
+    base_url: https://eu.openrouter.ai/api/v1
+    harness_model: z-ai/glm-5.3
+    args: { usage_cost: usd }
+  - id: deepseek-v4-flash
+    harness: generic-openai
+    secret: JUROR_OPENROUTER_API_KEY
+    label: DeepSeek V4 Flash (OpenRouter EU)
+    base_url: https://eu.openrouter.ai/api/v1
+    harness_model: deepseek/deepseek-v4-flash-0731
+    args: { usage_cost: usd }
+  - id: kimi-k2.7-code
+    harness: generic-openai
+    secret: JUROR_OPENROUTER_API_KEY
+    label: Kimi K2.7 Code (OpenRouter EU)
+    base_url: https://eu.openrouter.ai/api/v1
+    harness_model: moonshotai/kimi-k2.7-code
+    args: { usage_cost: usd }
+
+# Precision first: publish what at least two of the three raise; a lone P0/P1 is published only when it survives
+# an attempt to refute it. Everything filtered out stays visible in the collapsed "suppressed" block.
+consensus:
+  min_agreement: majority
+  verify_solo_findings: true
+
+review:
+  publish_mode: consensus
+  severity_floor: P2
+  max_inline_comments: 10
+  paths_ignore:
+    - "**/*.lock"
+    - "**/package-lock.json"
+    - "**/pnpm-lock.yaml"
+    - "**/yarn.lock"
+    - "dist/**"
+    - "build/**"
+    - "**/*.generated.*"
+    - "**/*.min.js"
+    - "**/*.min.css"
+
+budget:
+  target_cost_usd_per_pr: 2.00             # a planning target; the receipt on each review shows the real spend
+  on_exceed: partial
+
+output:
+  sequence_diagram: false
+  cost_receipt: true
+  suppressed_findings: collapsed
