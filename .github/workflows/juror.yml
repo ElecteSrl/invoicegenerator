@@ -1,0 +1,66 @@
+# Juror (juror-ai/juror, MIT) — a cross-model jury on every pull request. A trial, Fabio 2026-11-09 ("juror on all
+# the repos"); the record and how it is judged are ElecteSrl/electe.net's docs/tooling/juror.md. The jury, the EU
+# endpoint and the publish rules are `.juror.yml`, which Juror reads from the BASE revision only.
+#
+#   - FAIL-CLOSED like opencode.yml: without the OPENROUTER_API_KEY secret, or while `.juror.yml` is not yet on the
+#     base branch, the job exits green having called no model (Juror's built-in default jury needs keys we do not
+#     hold and does not use the EU endpoint, so it is never allowed to run here).
+#   - FORK pull requests and Dependabot are skipped: `pull_request` gives forks no secrets, and the `if` below
+#     skips them before anything starts.
+#   - The provider key reaches each model process alone; GITHUB_TOKEN reaches only Juror's publisher, after every
+#     juror has exited (Juror's README, Security 1 and 4). The checkout does not persist credentials.
+#   - Pinned by commit SHA (house rule for actions): juror-ai/juror v1.4.8. Bump on the monthly round.
+name: juror
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    concurrency:
+      group: juror-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          # Juror loads its policy and AGENTS.md from the base revision: every ref, blobs on demand.
+          fetch-depth: 0
+          filter: blob:none
+          persist-credentials: false
+
+      - name: Gate on the secret and the base revision's config (fail-closed)
+        id: gate
+        env:
+          HAS_KEY: ${{ secrets.OPENROUTER_API_KEY != '' }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ "$HAS_KEY" != "true" ]; then
+            echo "armed=false" >> "$GITHUB_OUTPUT"
+            echo "OPENROUTER_API_KEY is not set, so Juror did nothing." >> "$GITHUB_STEP_SUMMARY"
+          elif ! git cat-file -e "$BASE_SHA:.juror.yml" 2>/dev/null; then
+            echo "armed=false" >> "$GITHUB_OUTPUT"
+            echo "\`.juror.yml\` is not on this pull request's base yet; Juror reads only the base's config, so it did nothing (its default jury is not allowed here)." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "armed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Juror review
+        if: steps.gate.outputs.armed == 'true'
+        uses: juror-ai/juror@0742ebb365e394bea33fbe2018fb277a873b46a6 # v1.4.8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          JUROR_OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
